@@ -20,10 +20,25 @@ public class RateLimiterService {
         this.properties = properties;
     }
 
-    public boolean isAllowed(String key) {
+    public boolean isAllowed(String key, String path) {
 
-        RateLimitRule rule = properties.toRule(); // same rule for all APIs
+        RateLimitRule rule;
 
+        // ✅ SIMPLE PER-API SELECTION USING IF–ELSE
+        if (path.contains("/api/hello") && properties.getApi().getHello() != null) {
+            rule = properties.getApi().getHello().toRule();
+        } 
+        else if (path.contains("/api/login") && properties.getApi().getLogin() != null) {
+            rule = properties.getApi().getLogin().toRule();
+        } 
+        else if (path.contains("/api/orders") && properties.getApi().getOrders() != null) {
+            rule = properties.getApi().getOrders().toRule();
+        } 
+        else {
+            rule = properties.getDefaultRule().toRule();  // ✅ fallback
+        }
+
+        // ✅ SIMPLE ALGORITHM SWITCH
         if ("TOKEN_BUCKET".equalsIgnoreCase(properties.getAlgorithm())) {
             return tokenLimiter.isAllowed(key, rule);
         } else {

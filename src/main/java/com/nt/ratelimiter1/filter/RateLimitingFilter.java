@@ -34,8 +34,9 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
         String userId = extractUserIdFromSecurityContext(); // TODO: integrate auth
         String key = keyBuilder.buildKey(request, userId);
+        String path = request.getRequestURI();
 
-        if (!rateLimiterService.isAllowed(key)) {
+        if (!rateLimiterService.isAllowed(key,path)) {
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
             response.getWriter().write("""

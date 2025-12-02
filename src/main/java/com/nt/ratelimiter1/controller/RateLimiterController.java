@@ -10,4 +10,14 @@ public class RateLimiterController {
     public String hello() {
         return "Hello, you are within the rate limit!";
     }
+
+    @GetMapping("/api/login")
+    public String login() {
+        return "this is a login page!";
+    }
+
+    @GetMapping("/api/orders")
+    public String orders() {
+        return "this is a orders page!";
+    }
 }
